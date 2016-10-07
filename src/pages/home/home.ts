@@ -29,6 +29,30 @@ export class HomePage implements AfterContentInit{
     this.initPuzzle(this.puzzle);
   }
 
+  isPuzzleSolved() {
+    var solved = true;
+    var arr = [];
+    for( var r = 1 ; r <= 4 ; r++ )
+      for( var c = 1 ; c <= 4 ; c++ ) {
+        var temp = `#t${r}${c} button span`;
+        arr.push( document.querySelector(temp).innerText );
+      }
+
+    for( var i = 0 ; i < 15 ; i++ ) {
+      console.log(`comparing: ${arr[i]}  ${i+1}` + (parseInt(arr[i]) == (i+1)));
+      if( parseInt(arr[i]) != (i+1) ) {
+        solved = false;
+        break;
+      }
+    }
+
+    console.log( arr );
+
+    if( solved ) {
+      alert( "You did it" );
+    }
+  }
+
   /**
    *
    * @param puzzle
@@ -59,6 +83,7 @@ export class HomePage implements AfterContentInit{
    * @param clickedTileLoc
    */
   move(clickedTileLoc) {
+    var temp1 = this.emptyTileLoc;
     console.log( "clicked: " + clickedTileLoc + "--" + "empty: " + this.emptyTileLoc )
     if( clickedTileLoc.charAt(0) == this.emptyTileLoc.charAt(0) ) {       // row
       this.equalRowClicked(clickedTileLoc)
@@ -66,6 +91,11 @@ export class HomePage implements AfterContentInit{
       this.equalColClicked(clickedTileLoc);
     }
     console.log( "empty tile loc: " + this.emptyTileLoc );
+    var temp2 = this.emptyTileLoc;
+
+    if( temp1 != temp2 ) {
+      this.isPuzzleSolved();
+    }
   }
 
   /**
