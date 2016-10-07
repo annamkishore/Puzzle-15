@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterContentInit } from '@angular/core';
 
 import { NavController } from 'ionic-angular';
 
@@ -6,9 +6,9 @@ import { NavController } from 'ionic-angular';
   selector: 'page-home',
   templateUrl: 'home.html'
 })
-export class HomePage {
+export class HomePage implements AfterContentInit{
 
-  private puzzle: [];
+  private puzzle: number[][];
   private emptyTileLoc: string;
 
   /**
@@ -16,20 +16,49 @@ export class HomePage {
    * @param navCtrl
    */
   constructor(public navCtrl: NavController) {
-    this.puzzle = [ [1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,0] ];
+    // this.puzzle = [ [1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,0] ];
+    this.puzzle = [[9, 5, 2, 3], [13, 6, 1, 7], [14, 11, 4, 8], [10, 15, 12]];
     this.emptyTileLoc = "44";
-    console.log(this.puzzle)
+    console.log(this.puzzle);
+  }
+
+  /**
+   * life cycle method
+   */
+  ngAfterContentInit() {
+    this.initPuzzle(this.puzzle);
+  }
+
+  /**
+   *
+   * @param puzzle
+   */
+  initPuzzle(puzzle) {
+    for( var r = 0 ; r < puzzle.length ; r++ )
+      for( var c = 0 ; c < puzzle[r].length ; c++ ) {
+        var temp = `#t${r+1}${c+1} button span`;
+        console.log( temp );
+        document.querySelector(temp).innerText = puzzle[r][c];
+      }
   }
 
   /**
    *
    * @param event
    */
-  moveTiles(event){
+  moveTiles(event) {
+    // this.initPuzzle(this.puzzle);
     console.log("function moveTiles--------")
-    var clickedTileId = "" + event.path.filter(item =>item.tagName=="ION-COL")[0].id;
+    var clickedTileId = "" + event.path.filter(item =>item.tagName == "ION-COL")[0].id; //ex: t43
     var clickedTileLoc = clickedTileId.substring(1);  //ex: 43
+    this.move(clickedTileLoc);
+  }
 
+  /**
+   *
+   * @param clickedTileLoc
+   */
+  move(clickedTileLoc) {
     console.log( "clicked: " + clickedTileLoc + "--" + "empty: " + this.emptyTileLoc )
     if( clickedTileLoc.charAt(0) == this.emptyTileLoc.charAt(0) ) {       // row
       this.equalRowClicked(clickedTileLoc)
