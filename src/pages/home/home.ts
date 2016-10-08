@@ -80,14 +80,18 @@ export class HomePage implements AfterContentInit{
     this.startTimer();
   }
 
+  /**
+   *
+   */
   startTimer() {
     this.gameTimerObj = setInterval( ()=>{this.gameTimer++;
-                                          this.timeMessage = `Timer: ${parseInt(this.gameTimer/60)}m ${this.gameTimer%60}s`;
-                                          console.log(this.timeMessage);
-                                          console.log(this.gameTimer);
-                                        }, 1*1000 );
+                                          this.timeMessage = `Timer: ${parseInt(this.gameTimer/60)}m ${this.gameTimer%60}s`;},
+                                     1*1000 );
   }
 
+  /**
+   *
+   */
   stopTimer() {
     clearInterval(this.gameTimerObj);
   }
@@ -96,10 +100,10 @@ export class HomePage implements AfterContentInit{
    *
    * @param event
    */
-  moveTiles(event) {
+  moveTiles() {
     // this.initPuzzle(this.puzzle);
     console.log("function moveTiles--------")
-    var clickedTileId = "" + event.path.filter(item =>item.tagName == "ION-COL")[0].id; //ex: t43
+    var clickedTileId = "" + window.event.path.filter(item =>item.tagName == "ION-COL")[0].id; //ex: t43
     var clickedTileLoc = clickedTileId.substring(1);  //ex: 43
     this.move(clickedTileLoc);
   }
