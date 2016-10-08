@@ -10,6 +10,7 @@ export class HomePage implements AfterContentInit{
 
   private puzzle: number[][];
   private emptyTileLoc: string;
+  private timeMessage: string;
 
   /**
    *
@@ -49,7 +50,9 @@ export class HomePage implements AfterContentInit{
     console.log( arr );
 
     if( solved ) {
-      var toast = this.toastCtrl.create({message: "Congrats!!", showCloseButton: true, closeButtonText: 'Play Again'});
+      this.stopTimer();
+      var toast = this.toastCtrl.create({message: `Congrats!! Solved in ${parseInt(this.gameTimer/60)}m ${this.gameTimer%60}s`, showCloseButton: true, closeButtonText: 'Play Again'});
+      this.timeMessage = "";
       toast.onDidDismiss( () => {console.log("dismissed"); this.initPuzzle(this.puzzle)} );
       toast.present();
     }
@@ -60,6 +63,9 @@ export class HomePage implements AfterContentInit{
    * @param puzzle
    */
   initPuzzle(puzzle) {
+    this.gameTimer = 0;
+    this.timeMessage = "";
+
     if( this.emptyTileLoc != "44" ) {
       this.swap(`t${this.emptyTileLoc}`, "t44" );
     }
@@ -70,6 +76,20 @@ export class HomePage implements AfterContentInit{
         console.log( temp );
         document.querySelector(temp).innerText = puzzle[r][c];
       }
+
+    this.startTimer();
+  }
+
+  startTimer() {
+    this.gameTimerObj = setInterval( ()=>{this.gameTimer++;
+                                          this.timeMessage = `Timer: ${parseInt(this.gameTimer/60)}m ${this.gameTimer%60}s`;
+                                          console.log(this.timeMessage);
+                                          console.log(this.gameTimer);
+                                        }, 1*1000 );
+  }
+
+  stopTimer() {
+    clearInterval(this.gameTimerObj);
   }
 
   /**
