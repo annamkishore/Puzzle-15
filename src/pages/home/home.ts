@@ -1,6 +1,6 @@
 import { Component, AfterContentInit } from '@angular/core';
 
-import { NavController } from 'ionic-angular';
+import { NavController, ToastController } from 'ionic-angular';
 
 @Component({
   selector: 'page-home',
@@ -15,7 +15,7 @@ export class HomePage implements AfterContentInit{
    *
    * @param navCtrl
    */
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, public toastCtrl: ToastController) {
     // this.puzzle = [ [1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,0] ];
     this.puzzle = [[9, 5, 2, 3], [13, 6, 1, 7], [14, 11, 4, 8], [10, 15, 12]];
     this.emptyTileLoc = "44";
@@ -49,7 +49,9 @@ export class HomePage implements AfterContentInit{
     console.log( arr );
 
     if( solved ) {
-      alert( "You did it" );
+      var toast = this.toastCtrl.create({message: "Congrats!!", showCloseButton: true, closeButtonText: 'Play Again'});
+      toast.onDidDismiss( () => {console.log("dismissed"); this.initPuzzle(this.puzzle)} );
+      toast.present();
     }
   }
 
@@ -58,6 +60,10 @@ export class HomePage implements AfterContentInit{
    * @param puzzle
    */
   initPuzzle(puzzle) {
+    if( this.emptyTileLoc != "44" ) {
+      this.swap(`t${this.emptyTileLoc}`, "t44" );
+    }
+
     for( var r = 0 ; r < puzzle.length ; r++ )
       for( var c = 0 ; c < puzzle[r].length ; c++ ) {
         var temp = `#t${r+1}${c+1} button span`;
@@ -148,8 +154,8 @@ export class HomePage implements AfterContentInit{
 
   /**
    *
-   * @param tile1
-   * @param tile2
+   * @param tile1 (ex: t11)
+   * @param tile2 (ex: t12)
    */
   swap(tile1, tile2) {
     console.log( "swaping: " + tile1 + ", " + tile2)
