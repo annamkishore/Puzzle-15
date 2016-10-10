@@ -11,9 +11,9 @@ export class HomePage implements AfterContentInit{
   private puzzle: number[][];
   private emptyTileLoc: string;
 
-  private timeMessage: string;  // used to show to user
   private timeTicker;
   private timerRef;
+  public timeMessage: string;  // used to show to user
 
   /**
    *
@@ -65,8 +65,8 @@ export class HomePage implements AfterContentInit{
       }
 
     for( var i = 0 ; i < 15 ; i++ ) {
-      console.log(`comparing: ${arr[i]}  ${i+1}` + (parseInt(arr[i]) == (i+1)));
-      if( parseInt(arr[i]) != (i+1) ) {
+      console.log(`comparing: ${arr[i]}  ${i+1}` + (Math.round(arr[i]) == (i+1)));
+      if( Math.round(arr[i]) != (i+1) ) {
         solved = false;
         break;
       }
@@ -76,7 +76,7 @@ export class HomePage implements AfterContentInit{
 
     if( solved ) {
       this.stopTimer();
-      var toast = this.toastCtrl.create({message: `Congrats!! Solved in ${parseInt(this.timeTicker/60)}m ${this.timeTicker%60}s`, showCloseButton: true, closeButtonText: 'Play Again'});
+      var toast = this.toastCtrl.create({message: `Congrats!! Solved in ${Math.round(this.timeTicker/60)}m ${this.timeTicker%60}s`, showCloseButton: true, closeButtonText: 'Play Again'});
       this.timeMessage = "";
       toast.onDidDismiss( () => {console.log("dismissed"); this.initPuzzle(this.puzzle)} );
       toast.present();
@@ -88,7 +88,7 @@ export class HomePage implements AfterContentInit{
    */
   startTimer() {
     this.timerRef = setInterval( ()=>{this.timeTicker++;
-                                          this.timeMessage = `Timer: ${parseInt(this.timeTicker/60)}m ${this.timeTicker%60}s`;},
+                                          this.timeMessage = `Timer: ${Math.round(this.timeTicker/60)}m ${this.timeTicker%60}s`;},
                                      1*1000 );
   }
 
@@ -148,7 +148,7 @@ export class HomePage implements AfterContentInit{
       }
     }else if( emptyCol < clickedCol ) {
       while( emptyCol < clickedCol ) {
-        this.swap(`t${currRow}${emptyCol}`, `t${currRow}${parseInt(emptyCol)+1}`)
+        this.swap(`t${currRow}${emptyCol}`, `t${currRow}${Math.round(emptyCol)+1}`)
         emptyCol++;
       }
     }
@@ -172,7 +172,7 @@ export class HomePage implements AfterContentInit{
       }
     }else if( emptyRow < clickedRow ) {
       while( emptyRow < clickedRow ) {
-        this.swap(`t${emptyRow}${currCol}`, `t${parseInt(emptyRow)+1}${currCol}`);
+        this.swap(`t${emptyRow}${currCol}`, `t${Math.round(emptyRow)+1}${currCol}`);
         emptyRow++;
       }
     }
