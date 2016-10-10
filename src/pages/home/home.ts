@@ -10,13 +10,16 @@ export class HomePage implements AfterContentInit{
 
   private puzzle: number[][];
   private emptyTileLoc: string;
-  private timeMessage: string;
+
+  private timeMessage: string;  // used to show to user
+  private timeTicker;
+  private timerRef;
 
   /**
    *
    * @param navCtrl
    */
-  constructor(public navCtrl: NavController, public toastCtrl: ToastController) {
+  constructor(private navCtrl: NavController, private toastCtrl: ToastController) {
     // this.puzzle = [ [1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,0] ];
     this.puzzle = [[9, 5, 2, 3], [13, 6, 1, 7], [14, 11, 4, 8], [10, 15, 12]];
     this.emptyTileLoc = "44";
@@ -28,6 +31,28 @@ export class HomePage implements AfterContentInit{
    */
   ngAfterContentInit() {
     this.initPuzzle(this.puzzle);
+  }
+
+  /**
+   *
+   * @param puzzle
+   */
+  initPuzzle(puzzle) {
+    this.timeTicker = 0;
+    this.timeMessage = "";
+
+    if( this.emptyTileLoc != "44" ) {
+      this.swap(`t${this.emptyTileLoc}`, "t44" );
+    }
+
+    for( var r = 0 ; r < puzzle.length ; r++ )
+      for( var c = 0 ; c < puzzle[r].length ; c++ ) {
+        var temp = `#t${r+1}${c+1} button span`;
+        console.log( temp );
+        document.querySelector(temp).innerText = puzzle[r][c];
+      }
+
+    this.startTimer();
   }
 
   isPuzzleSolved() {
@@ -51,7 +76,7 @@ export class HomePage implements AfterContentInit{
 
     if( solved ) {
       this.stopTimer();
-      var toast = this.toastCtrl.create({message: `Congrats!! Solved in ${parseInt(this.gameTimer/60)}m ${this.gameTimer%60}s`, showCloseButton: true, closeButtonText: 'Play Again'});
+      var toast = this.toastCtrl.create({message: `Congrats!! Solved in ${parseInt(this.timeTicker/60)}m ${this.timeTicker%60}s`, showCloseButton: true, closeButtonText: 'Play Again'});
       this.timeMessage = "";
       toast.onDidDismiss( () => {console.log("dismissed"); this.initPuzzle(this.puzzle)} );
       toast.present();
@@ -60,32 +85,10 @@ export class HomePage implements AfterContentInit{
 
   /**
    *
-   * @param puzzle
-   */
-  initPuzzle(puzzle) {
-    this.gameTimer = 0;
-    this.timeMessage = "";
-
-    if( this.emptyTileLoc != "44" ) {
-      this.swap(`t${this.emptyTileLoc}`, "t44" );
-    }
-
-    for( var r = 0 ; r < puzzle.length ; r++ )
-      for( var c = 0 ; c < puzzle[r].length ; c++ ) {
-        var temp = `#t${r+1}${c+1} button span`;
-        console.log( temp );
-        document.querySelector(temp).innerText = puzzle[r][c];
-      }
-
-    this.startTimer();
-  }
-
-  /**
-   *
    */
   startTimer() {
-    this.gameTimerObj = setInterval( ()=>{this.gameTimer++;
-                                          this.timeMessage = `Timer: ${parseInt(this.gameTimer/60)}m ${this.gameTimer%60}s`;},
+    this.timerRef = setInterval( ()=>{this.timeTicker++;
+                                          this.timeMessage = `Timer: ${parseInt(this.timeTicker/60)}m ${this.timeTicker%60}s`;},
                                      1*1000 );
   }
 
@@ -93,7 +96,7 @@ export class HomePage implements AfterContentInit{
    *
    */
   stopTimer() {
-    clearInterval(this.gameTimerObj);
+    clearInterval(this.timerRef);
   }
 
   /**
