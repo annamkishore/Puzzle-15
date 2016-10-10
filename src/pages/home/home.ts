@@ -113,7 +113,6 @@ export class HomePage implements AfterContentInit{
       case "BUTTON":  clickedTileId = srcElement.parentElement.id; break;
       case "ION-COL": clickedTileId = srcElement.id; break;
     }
-    this.debugMessage = srcElement.tagName;
     // var clickedTileId = "" + window.event.path.filter(item =>item.tagName == "ION-COL")[0].id; //ex: t43
     var clickedTileLoc = clickedTileId.substring(1);  //ex: 43
     this.move(clickedTileLoc);
