@@ -49,7 +49,7 @@ export class HomePage implements AfterContentInit{
       for( var c = 0 ; c < puzzle[r].length ; c++ ) {
         var temp = `#t${r+1}${c+1} button span`;
         console.log( temp );
-        document.querySelector(temp).innerText = puzzle[r][c];
+        document.querySelector(temp).textContent = puzzle[r][c];
       }
 
     this.startTimer();
@@ -61,7 +61,7 @@ export class HomePage implements AfterContentInit{
     for( var r = 1 ; r <= 4 ; r++ )
       for( var c = 1 ; c <= 4 ; c++ ) {
         var temp = `#t${r}${c} button span`;
-        arr.push( document.querySelector(temp).innerText );
+        arr.push( document.querySelector(temp).textContent );
       }
 
     for( var i = 0 ; i < 15 ; i++ ) {
@@ -100,13 +100,21 @@ export class HomePage implements AfterContentInit{
   }
 
   /**
-   *
+   * Event on tile click
    * @param event
    */
   moveTiles() {
     // this.initPuzzle(this.puzzle);
     console.log("function moveTiles--------")
-    var clickedTileId = "" + window.event.path.filter(item =>item.tagName == "ION-COL")[0].id; //ex: t43
+    var srcElement = window.event.srcElement;
+    var clickedTileId;
+    switch( srcElement.tagName ) {
+      case "SPAN":    clickedTileId = srcElement.parentElement.parentElement.id; break;
+      case "BUTTON":  clickedTileId = srcElement.parentElement.id; break;
+      case "ION-COL": clickedTileId = srcElement.id; break;
+    }
+    this.debugMessage = srcElement.tagName;
+    // var clickedTileId = "" + window.event.path.filter(item =>item.tagName == "ION-COL")[0].id; //ex: t43
     var clickedTileLoc = clickedTileId.substring(1);  //ex: 43
     this.move(clickedTileLoc);
   }
