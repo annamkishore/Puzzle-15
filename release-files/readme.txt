@@ -1,4 +1,15 @@
 
+-------------------------------------ionic commands-----------------------------------------
+
+
+$ionic build android
+  // to generate apk
+
+$ionic serve
+  // to run on browser
+
+-------------------------------------misc commands-----------------------------------------
+
 source => https://ionicframework.com/docs/guide/publishing.html
 
 $cordova build --release android
